@@ -5,19 +5,22 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
-public class ChallengeAttemptDTO {
+public final class ChallengeAttemptDTO {
 
 	@Min(1)
 	@Max(99)
-	int factorA, factorB;
+	private final int factorA, factorB;
 	@NotBlank
-	String userAlias;
-	@Positive(message="How could you possibly get a negative result here? Try again.")
-	int guess;
-	
+	private final String userAlias;
+	@Positive(message = "How could you possibly get a negative result here? Try again.")
+	private final int guess;
+
 	public ChallengeAttemptDTO() {
+		this.factorA = 0;
+		this.factorB = 0;
+		this.userAlias = null;
+		this.guess = 0;
 	}
-	
 
 	public ChallengeAttemptDTO(int factorA, int factorB, String userAlias, int guess) {
 		this.factorA = factorA;
@@ -41,24 +44,23 @@ public class ChallengeAttemptDTO {
 	public int getGuess() {
 		return guess;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
 			return false;
-		
-		if (obj == this) 
+
+		if (obj == this)
 			return true;
-		
+
 		if (!(obj instanceof ChallengeAttemptDTO))
 			return false;
-		
+
 		ChallengeAttemptDTO test = (ChallengeAttemptDTO) obj;
-		return (this.factorA == test.getFactorA()
-					&& this.factorB == test.getFactorB()
-					&& (this.userAlias == null ? test.getUserAlias() == null : this.userAlias.equals(test.getUserAlias()))
-					&& this.getGuess() == test.getGuess());
-		
+		return (this.factorA == test.getFactorA() && this.factorB == test.getFactorB()
+				&& (this.userAlias == null ? test.getUserAlias() == null : this.userAlias.equals(test.getUserAlias()))
+				&& this.getGuess() == test.getGuess());
+
 	}
 
 	@Override
@@ -70,5 +72,11 @@ public class ChallengeAttemptDTO {
 			result = 31 * result + this.userAlias.hashCode();
 		result = 31 * result + this.guess;
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "ChallengeAttemptDTO(factorA=" + this.getFactorA() + ", factorB=" + this.getFactorB() + ", userAlias="
+				+ this.getUserAlias() + ", guess=" + this.getGuess();
 	}
 }
