@@ -1,14 +1,17 @@
 package microservices.book.gamification.game;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import microservices.book.gamification.challenge.ChallengeSolvedDTO;
+import microservices.book.gamification.game.badgeprocessors.BadgeProcessor;
 import microservices.book.gamification.game.domain.BadgeCard;
 import microservices.book.gamification.game.domain.BadgeType;
 import microservices.book.gamification.game.domain.ScoreCard;
@@ -18,11 +21,16 @@ public class GameServiceImpl implements GameService {
 
 	private static final Logger log = LoggerFactory.getLogger(GameServiceImpl.class);
 	
-	@Autowired
-	private ScoreRepository scoreRespository;
+	private final ScoreRepository scoreRepository;
+	private final BadgeRepository badgeRepository;
+	// Spring injects all the @Component beans in this list
+	private final List<BadgeProcessor> badgeProcessors;
 	
-	public GameServiceImpl(ScoreRepository scoreRepository) {
-		this.scoreRespository = scoreRepository;
+	public GameServiceImpl(ScoreRepository scoreRepository, BadgeRepository badgeRepository,
+			List<BadgeProcessor> badgeProcessors) {
+		this.scoreRepository = scoreRepository;
+		this.badgeRepository = badgeRepository;
+		this.badgeProcessors = badgeProcessors;
 	}
 
 	@Override
@@ -30,7 +38,7 @@ public class GameServiceImpl implements GameService {
 		// We'll only give points if it's correct
 		if (challenge.isCorrect()) {
 			ScoreCard scoreCard = new ScoreCard(challenge.getUserId(), challenge.getAttemptId());
-			scoreRespository.save(scoreCard);
+			scoreRepository.save(scoreCard);
 			log.info("User {} scored {} points for attempt id {}", challenge.getUserAlias(), scoreCard.getScore(),
 					challenge.getAttemptId());
 			List<BadgeCard> badgeCards = processForBadges(challenge);
@@ -43,7 +51,34 @@ public class GameServiceImpl implements GameService {
 		}
 	}
 
-	private List<BadgeCard> processForBadges(ChallengeSolvedDTO challenge) {
+	/**
+	 * Checks the total score and the different score cards obtained
+	 * to give new badges in case their conditions are met.
+	 * 
+	 */
+	private List<BadgeCard> processForBadges(final ChallengeSolvedDTO solvedChallenge) {
+		Optional<Integer> optTotalScore = scoreRepository.getTotalScoreForUser(solvedChallenge.getUserId());
+		
+		if (optTotalScore.isEmpty())
+			return Collections.emptyList();
+		int totalScore = optTotalScore.get();
+		// Gets the total score and existing badges for that user
+		List<ScoreCard> scoreCardList = scoreRepository.findByUserIdOrderByScoreTimestampDesc(solvedChallenge.getUserId());
+		Set<BadgeType> alreadyGotBadges = badgeRepository.findByUserIdOrderByBadgeTimestampDesc(solvedChallenge.getUserId())
+				.stream()
+				.map(BadgeCard::getBadgeType)
+				.collect(Collectors.toSet());
+		
+		// Calls the badge processors for badges that the user doesn't have yet
+		List<BadgeCard> newBadgeCards = badgeProcessors.stream()
+				.filter(bp -> !alreadyGotBadges.contains(bp.badgeType()))
+				.map(bp -> bp.processForOptionalBadge(totalScore, scoreCardList, solvedChallenge)
+				).flatMap(Optional::stream) // return an empty stream if empty
+				// maps the optional if present to new BadgeCards
+				.map(badgeType -> new BadgeCard(solvedChallenge.getUserId(), badgeType)
+				)
+				.collect(Collectors.toList());
+		badgeRepository.saveAll(newBadgeCards);
 		return List.of(new BadgeCard(1L, BadgeType.LUCKY_NUMBER));
 	}
 

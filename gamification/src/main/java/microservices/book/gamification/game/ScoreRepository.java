@@ -1,5 +1,8 @@
 package microservices.book.gamification.game;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.repository.CrudRepository;
 
 import microservices.book.gamification.game.domain.ScoreCard;
@@ -10,5 +13,9 @@ import microservices.book.gamification.game.domain.ScoreCard;
  *
  */
 public interface ScoreRepository extends CrudRepository<ScoreCard, Long> {
+
+	Optional<Integer> getTotalScoreForUser(long userId);
+
+	List<ScoreCard> findByUserIdOrderByScoreTimestampDesc(Long userId);
 
 }
