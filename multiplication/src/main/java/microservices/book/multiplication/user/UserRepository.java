@@ -1,12 +1,13 @@
-package microservices.book.multiplication.challenge;
+package microservices.book.multiplication.user;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
-import microservices.book.multiplication.user.User;
-
 public interface UserRepository extends CrudRepository<User, Long> {
 
 	Optional<User> findByAlias(final String alias);
+
+	List<User> findAllByIdIn(List<Long> idList);
 }

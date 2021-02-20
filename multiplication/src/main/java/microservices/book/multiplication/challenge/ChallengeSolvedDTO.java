@@ -1,4 +1,4 @@
-package microservices.book.gamification.challenge;
+package microservices.book.multiplication.challenge;
 
 public final class ChallengeSolvedDTO {
 
