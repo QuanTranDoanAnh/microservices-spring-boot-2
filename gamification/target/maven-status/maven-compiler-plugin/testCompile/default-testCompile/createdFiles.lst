@@ -1,0 +1,5 @@
+microservices\book\gamification\game\LeaderBoardServiceImplTest.class
+microservices\book\gamification\game\LeaderBoardControllerTest.class
+microservices\book\gamification\game\GameControllerTest.class
+microservices\book\gamification\game\GameServiceTest.class
+microservices\book\gamification\GamificationApplicationTests.class
