@@ -7,7 +7,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +16,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import microservices.book.multiplication.serviceclients.GamificationServiceClient;
 import microservices.book.multiplication.user.User;
+import microservices.book.multiplication.user.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class ChallengeServiceTest {
@@ -29,10 +30,13 @@ public class ChallengeServiceTest {
 
 	@Mock
 	private ChallengeAttemptRepository attemptRepository;
+	
+	@Mock
+	private GamificationServiceClient gamificationServiceClient;
 
 	@BeforeEach
 	public void setUp() {
-		challengeService = new ChallengeServiceImpl(userRepository, attemptRepository);
+		challengeService = new ChallengeServiceImpl(userRepository, attemptRepository, gamificationServiceClient);
 		// Keep in mind that we needed to move the
 		// given(attemptRepository)... to the test cases
 		// that use it to prevent the unused stubs errors.
@@ -52,6 +56,7 @@ public class ChallengeServiceTest {
 		then(resultAttempt.isCorrect()).isTrue();
 		verify(userRepository).save(new User("john_doe"));
 		verify(attemptRepository).save(resultAttempt);
+		verify(gamificationServiceClient).sendAttempt(resultAttempt);
 	}
 
 	@Test
@@ -68,6 +73,7 @@ public class ChallengeServiceTest {
 		then(resultAttempt.isCorrect()).isFalse();
 		verify(userRepository).save(new User("john_doe"));
 		verify(attemptRepository).save(resultAttempt);
+		verify(gamificationServiceClient).sendAttempt(resultAttempt);
 	}
 
 	@Test
@@ -86,8 +92,9 @@ public class ChallengeServiceTest {
 		then(resultAttempt.getUser()).isEqualTo(existingUser);
 		verify(userRepository, never()).save(any());
 		verify(attemptRepository).save(resultAttempt);
+		verify(gamificationServiceClient).sendAttempt(resultAttempt);
 	}
-	
+
 	@Test
 	public void retrieveStatsTest() {
 		// given
@@ -95,12 +102,11 @@ public class ChallengeServiceTest {
 		ChallengeAttempt attempt1 = new ChallengeAttempt(1L, user, 50, 60, 3000, true);
 		ChallengeAttempt attempt2 = new ChallengeAttempt(2L, user, 50, 60, 3001, false);
 		List<ChallengeAttempt> lastAttempts = List.of(attempt1, attempt2);
-		given(attemptRepository.findTop10ByUserAliasOrderByIdDesc("john_doe"))
-			.willReturn(lastAttempts);
-		
+		given(attemptRepository.findTop10ByUserAliasOrderByIdDesc("john_doe")).willReturn(lastAttempts);
+
 		// when
 		List<ChallengeAttempt> latestAttemptResults = challengeService.getStatsForUser("john_doe");
-		
+
 		// then
 		then(latestAttemptResults).isEqualTo(lastAttempts);
 	}
