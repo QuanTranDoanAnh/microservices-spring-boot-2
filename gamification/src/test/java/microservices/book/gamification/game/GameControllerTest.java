@@ -22,7 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import microservices.book.gamification.challenge.ChallengeSolvedDTO;
+import microservices.book.gamification.challenge.ChallengeSolvedEvent;
 import microservices.book.gamification.game.GameService.GameResult;
 import microservices.book.gamification.game.domain.BadgeType;
 
@@ -38,13 +38,13 @@ public class GameControllerTest {
 	private MockMvc mockMvc;
 	
 	@Autowired
-	private JacksonTester<ChallengeSolvedDTO> jsonChallengSolvedDTO;
+	private JacksonTester<ChallengeSolvedEvent> jsonChallengSolvedDTO;
 	
 	@Test
 	public void postResultTest() throws Exception {
 		// given
 		GameResult gameResult = new GameResult(10, List.of(BadgeType.FIRST_WON));
-		ChallengeSolvedDTO challenge = new ChallengeSolvedDTO(10L, true, 20, 40, 1L, "john");
+		ChallengeSolvedEvent challenge = new ChallengeSolvedEvent(10L, true, 20, 40, 1L, "john");
 		given(gameService.newAttemptForUser(eq(challenge))).willReturn(gameResult);
 		
 		// when

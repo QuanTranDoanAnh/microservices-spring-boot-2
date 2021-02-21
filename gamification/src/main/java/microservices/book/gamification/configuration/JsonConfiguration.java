@@ -1,4 +1,4 @@
-package microservices.book.gamification;
+package microservices.book.gamification.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

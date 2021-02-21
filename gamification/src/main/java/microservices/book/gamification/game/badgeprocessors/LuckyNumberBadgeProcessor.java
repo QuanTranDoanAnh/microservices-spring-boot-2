@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import microservices.book.gamification.challenge.ChallengeSolvedDTO;
+import microservices.book.gamification.challenge.ChallengeSolvedEvent;
 import microservices.book.gamification.game.domain.BadgeType;
 import microservices.book.gamification.game.domain.ScoreCard;
 
@@ -16,7 +16,7 @@ public class LuckyNumberBadgeProcessor implements BadgeProcessor {
 	
 	@Override
 	public Optional<BadgeType> processForOptionalBadge(int currentScore, List<ScoreCard> scoreCardList,
-			ChallengeSolvedDTO solvedChallenge) {
+			ChallengeSolvedEvent solvedChallenge) {
 		return solvedChallenge.getFactorA() == LUCKY_FACTOR ||
 				solvedChallenge.getFactorB() == LUCKY_FACTOR ?
 				Optional.of(BadgeType.LUCKY_NUMBER) :

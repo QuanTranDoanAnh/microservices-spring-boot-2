@@ -18,13 +18,16 @@ public class ChallengeServiceImpl implements ChallengeService {
 
 	private final UserRepository userRepository;
 	private final ChallengeAttemptRepository attemptRepository;
-	private final GamificationServiceClient gamificationServiceClient;
+	//private final GamificationServiceClient gamificationServiceClient; //replaced
+	private final ChallengeEventPub challengeEventPub; // replacing REST client
 
 	public ChallengeServiceImpl(UserRepository userRepository, ChallengeAttemptRepository attemptRepository,
-			GamificationServiceClient gamificationServiceClient) {
+			/*GamificationServiceClient gamificationServiceClient*/
+			ChallengeEventPub challengeEventPub) {
 		this.userRepository = userRepository;
 		this.attemptRepository = attemptRepository;
-		this.gamificationServiceClient = gamificationServiceClient;
+		//this.gamificationServiceClient = gamificationServiceClient; // replaced
+		this.challengeEventPub = challengeEventPub;
 	}
 
 	@Override
@@ -44,9 +47,12 @@ public class ChallengeServiceImpl implements ChallengeService {
 		// stores the attempt
 		ChallengeAttempt storedAttempt = attemptRepository.save(checkedAttempt);
 		
-		// Sends the attempt to gamification and prints the message
-		boolean success = gamificationServiceClient.sendAttempt(storedAttempt);
-		log.info("Gamification service response: {}", success);
+		//// Sends the attempt to gamification and prints the message
+		//boolean success = gamificationServiceClient.sendAttempt(storedAttempt);
+		//log.info("Gamification service response: {}", success);
+		
+		// Publishes an event to notify potentially interested subscribers
+		challengeEventPub.challengeSolved(storedAttempt);
 		return storedAttempt;
 	}
 

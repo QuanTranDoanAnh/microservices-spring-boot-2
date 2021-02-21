@@ -1,6 +1,6 @@
-package microservices.book.multiplication.challenge;
+package microservices.book.gamification.challenge;
 
-public final class ChallengeSolvedDTO {
+public final class ChallengeSolvedEvent {
 
 	private final long attemptId;
 	private final boolean correct;
@@ -9,7 +9,7 @@ public final class ChallengeSolvedDTO {
 	private final long userId;
 	private final String userAlias;
 
-	public ChallengeSolvedDTO() {
+	public ChallengeSolvedEvent() {
 		this.attemptId = 0L;
 		this.correct = false;
 		this.factorA = 0;
@@ -18,7 +18,7 @@ public final class ChallengeSolvedDTO {
 		this.userAlias = null;
 	}
 
-	public ChallengeSolvedDTO(final long attemptId, final boolean correct, final int factorA, final int factorB,
+	public ChallengeSolvedEvent(final long attemptId, final boolean correct, final int factorA, final int factorB,
 			final long userId, final String userAlias) {
 		this.attemptId = attemptId;
 		this.correct = correct;
@@ -58,9 +58,9 @@ public final class ChallengeSolvedDTO {
 			return false;
 		if (this == obj)
 			return true;
-		if (!(obj instanceof ChallengeSolvedDTO))
+		if (!(obj instanceof ChallengeSolvedEvent))
 			return false;
-		ChallengeSolvedDTO test = (ChallengeSolvedDTO) obj;
+		ChallengeSolvedEvent test = (ChallengeSolvedEvent) obj;
 		return ((this.attemptId == test.getAttemptId()) && (this.correct == test.isCorrect())
 				&& (this.factorA == test.getFactorA()) && (this.factorB == test.getFactorB())
 				&& (this.userId == test.getUserId())
@@ -82,7 +82,7 @@ public final class ChallengeSolvedDTO {
 
 	@Override
 	public String toString() {
-		return "ChallengeSolvedDTO (attemptId=" + this.attemptId + ", correct=" + this.correct + ", factorA="
+		return "ChallengeSolvedEvent (attemptId=" + this.attemptId + ", correct=" + this.correct + ", factorA="
 				+ this.factorA + ", factorB=" + this.factorB + ", userId=" + this.userId + ", userAlias="
 				+ this.userAlias + ")";
 	}

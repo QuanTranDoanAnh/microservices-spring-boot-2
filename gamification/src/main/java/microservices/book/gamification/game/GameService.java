@@ -3,7 +3,7 @@ package microservices.book.gamification.game;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import microservices.book.gamification.challenge.ChallengeSolvedDTO;
+import microservices.book.gamification.challenge.ChallengeSolvedEvent;
 import microservices.book.gamification.game.domain.BadgeType;
 
 public interface GameService {
@@ -15,7 +15,7 @@ public interface GameService {
 	 * @return a {@link GameResult} object containing the new score and badge cards
 	 *         obtained
 	 */
-	GameResult newAttemptForUser(ChallengeSolvedDTO challenge);
+	GameResult newAttemptForUser(ChallengeSolvedEvent challenge);
 
 	final class GameResult {
 		private final int score;

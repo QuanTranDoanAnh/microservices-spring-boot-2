@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import microservices.book.gamification.challenge.ChallengeSolvedDTO;
+import microservices.book.gamification.challenge.ChallengeSolvedEvent;
 
 @RestController
 @RequestMapping("/attempts")
@@ -21,7 +21,7 @@ public class GameController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
-	void postResult(@RequestBody ChallengeSolvedDTO challenge) {
+	void postResult(@RequestBody ChallengeSolvedEvent challenge) {
 		gameService.newAttemptForUser(challenge);
 	}
 	
