@@ -6,7 +6,6 @@
 /home/anhquan/programming/microservices-spring-boot-2/gamification/src/main/java/microservices/book/gamification/game/badgeprocessors/BronzeBadgeProcessor.java
 /home/anhquan/programming/microservices-spring-boot-2/gamification/src/main/java/microservices/book/gamification/challenge/ChallengeSolvedEvent.java
 /home/anhquan/programming/microservices-spring-boot-2/gamification/src/main/java/microservices/book/gamification/game/GameEventHandler.java
-/home/anhquan/programming/microservices-spring-boot-2/gamification/src/main/java/microservices/book/gamification/configuration/WebConfiguration.java
 /home/anhquan/programming/microservices-spring-boot-2/gamification/src/main/java/microservices/book/gamification/game/badgeprocessors/FirstWonBadgeProcessor.java
 /home/anhquan/programming/microservices-spring-boot-2/gamification/src/main/java/microservices/book/gamification/game/LeaderBoardService.java
 /home/anhquan/programming/microservices-spring-boot-2/gamification/src/main/java/microservices/book/gamification/game/badgeprocessors/GoldBadgeProcessor.java
