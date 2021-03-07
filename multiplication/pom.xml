@@ -70,10 +70,17 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-consul-config</artifactId>
 		</dependency>
-		<!-- to kick start bootstrap.properties - Since Spring Boot 2.4.0 and Spring Cloud 2020.1 -->
+		<!-- to kick start bootstrap.properties - Since Spring Boot 2.4.0 and Spring 
+			Cloud 2020.1 -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
+
+		<!-- Spring Cloud Sleuth for distributed tracing -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-sleuth</artifactId>
 		</dependency>
 
 		<dependency>
